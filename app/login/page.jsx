@@ -7,7 +7,7 @@ export default function Login() {
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: "https://cems-kohl.vercel.app/", // change after deploy
+        redirectTo: window.location.origin, // change after deploy
       },
     });
   };
