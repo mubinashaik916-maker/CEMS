@@ -11,16 +11,41 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    const init = async () => {
-      const { data } = await supabase.auth.getUser();
-      if (!data.user) { router.push("/login"); return; }
-      setUser(data.user);
-      const { data: eventsData } = await supabase.from("events").select("*");
-      setEvents(eventsData || []);
-      setLoading(false);
-    };
-    init();
-  }, []);
+  const init = async () => {
+    const { data } = await supabase.auth.getUser();
+
+    if (!data.user) {
+      router.push("/login");
+      return;
+    }
+
+    const user = data.user;
+    setUser(user);
+
+    // ✅ CHECK PROFILE EXISTS
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    // 👉 IF NO PROFILE → REDIRECT
+    if (!profile) {
+      router.push("/complete-profile");
+      return;
+    }
+
+    // ✅ FETCH EVENTS ONLY AFTER PROFILE EXISTS
+    const { data: eventsData } = await supabase
+      .from("events")
+      .select("*");
+
+    setEvents(eventsData || []);
+    setLoading(false);
+  };
+
+  init();
+}, []);
 
   const register = async (eventId) => {
     const { data } = await supabase.auth.getUser();
