@@ -1,26 +1,187 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0d0d0f;
+  --foreground: #f2f2f4;
+  --surface: #18181c;
+  --surface-2: #202026;
+  --border: #ffffff18;
+  --border-strong: #ffffff30;
+
+  --primary: #7c3aed;
+  --primary-light: #a78bfa;
+  --primary-dark: #5b21b6;
+  --primary-glow: rgba(124, 58, 237, 0.3);
+
+  --accent: #06b6d4;
+  --accent-light: #67e8f9;
+  --accent-glow: rgba(6, 182, 212, 0.2);
+
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+
+  --text-muted: #71717a;
+  --text-subtle: #3f3f46;
+
+  /* Brutalist offset shadow */
+  --shadow-brutal: 4px 4px 0px #ffffff22;
+  --shadow-brutal-primary: 4px 4px 0px var(--primary-dark);
+  --shadow-brutal-hover: 6px 6px 0px #ffffff30;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── GRAIN TEXTURE ── */
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', system-ui, sans-serif;
+  min-height: 100vh;
+  line-height: 1.6;
+  position: relative;
 }
+
+/* SVG grain overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: -200%;
+  width: 400%;
+  height: 400%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 1;
+  animation: grain 0.8s steps(1) infinite;
+}
+
+/* Subtle purple tint top-left */
+body::after {
+  content: '';
+  position: fixed;
+  top: -20%;
+  left: -10%;
+  width: 55vw;
+  height: 55vw;
+  background: radial-gradient(circle, rgba(124,58,237,0.07) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes grain {
+  0%, 100% { transform: translate(0, 0); }
+  10%       { transform: translate(-2%, -3%); }
+  20%       { transform: translate(3%, 2%); }
+  30%       { transform: translate(-1%, 4%); }
+  40%       { transform: translate(4%, -1%); }
+  50%       { transform: translate(-3%, 3%); }
+  60%       { transform: translate(2%, -4%); }
+  70%       { transform: translate(-4%, 1%); }
+  80%       { transform: translate(1%, -2%); }
+  90%       { transform: translate(3%, 4%); }
+}
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--surface); }
+::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 999px; }
+
+::selection { background: var(--primary-glow); color: var(--primary-light); }
+
+/* ── UTILITY ── */
+.gradient-text {
+  background: linear-gradient(135deg, var(--primary-light), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Brutalist card */
+.brutal-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border-strong);
+  border-radius: 12px;
+  box-shadow: var(--shadow-brutal);
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+.brutal-card:hover {
+  box-shadow: var(--shadow-brutal-hover);
+  transform: translate(-1px, -1px);
+}
+
+/* Brutalist button */
+.btn-brutal {
+  border: 1.5px solid var(--border-strong);
+  box-shadow: 3px 3px 0px #ffffff20;
+  transition: all 0.12s ease;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+.btn-brutal:hover {
+  box-shadow: 5px 5px 0px #ffffff28;
+  transform: translate(-1px, -1px);
+}
+.btn-brutal:active {
+  box-shadow: 1px 1px 0px #ffffff18;
+  transform: translate(1px, 1px);
+}
+
+.btn-primary {
+  background: var(--primary);
+  border: 1.5px solid var(--primary-light);
+  box-shadow: 3px 3px 0px var(--primary-dark);
+  color: #fff;
+  font-weight: 700;
+  transition: all 0.12s ease;
+}
+.btn-primary:hover {
+  box-shadow: 5px 5px 0px var(--primary-dark);
+  transform: translate(-1px, -1px);
+}
+.btn-primary:active {
+  box-shadow: 1px 1px 0px var(--primary-dark);
+  transform: translate(1px, 1px);
+}
+
+button { cursor: pointer; font-family: inherit; }
+input, textarea, select { font-family: inherit; }
+input:focus, textarea:focus, select:focus { outline: none; }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 3px 3px 0px var(--primary-dark); }
+  50%       { box-shadow: 3px 3px 0px var(--primary-dark), 0 0 20px var(--primary-glow); }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.animate-fade-in   { animation: fadeIn 0.4s ease forwards; }
+.animate-slide-in  { animation: slideIn 0.35s ease forwards; }
+.animate-pulse-glow { animation: pulse-glow 2.5s ease-in-out infinite; }
+.animate-spin      { animation: spin 0.8s linear infinite; }
